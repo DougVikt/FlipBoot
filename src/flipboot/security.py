@@ -65,6 +65,10 @@ def verify_file_integrity(filepath: str, expected_hash: str = None) -> tuple:
 
 def verify_project_integrity(verbose: bool = True) -> bool:
     """Verify integrity of all project files."""
+    # Skip integrity check in frozen (PyInstaller) mode
+    if getattr(sys, "frozen", False):
+        return True
+
     project_dir = get_project_dir()
     all_ok = True
     results = []
@@ -243,11 +247,15 @@ def get_security_warnings() -> list:
     if os.access(project_dir, os.W_OK):
         warnings.append(f"Project directory is writable: {project_dir}")
 
-    # Check for suspicious files
-    suspicious = [".exe", ".bat", ".ps1", ".sh"] if system == "windows" else [".exe", ".so"]
-    for f in os.listdir(project_dir):
-        if any(f.endswith(ext) for ext in suspicious) and f not in ["run.bat", "run.sh"]:
-            warnings.append(f"Suspicious file found: {f}")
+    # Check for suspicious files (skip in frozen/PyInstaller mode)
+    if not getattr(sys, "frozen", False):
+        suspicious = [".exe", ".bat", ".ps1", ".sh"] if system == "windows" else [".exe", ".so"]
+        try:
+            for f in os.listdir(project_dir):
+                if any(f.endswith(ext) for ext in suspicious) and f not in ["run.bat", "run.sh"]:
+                    warnings.append(f"Suspicious file found: {f}")
+        except FileNotFoundError:
+            pass
 
     return warnings
 
