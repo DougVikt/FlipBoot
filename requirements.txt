@@ -1,0 +1,4 @@
+# FlipBoot - Boot Switcher to Linux
+# No external dependencies required - uses only Python standard library
+
+python>=3.8
