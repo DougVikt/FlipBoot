@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0-alpha] - 2026-11-21
 
 ### Added
+- Executable build system with PyInstaller
+- GitHub Actions workflow for multi-platform builds
+- Build documentation (docs/BUILD.md)
+- Windows version info file (version_info.txt)
+- PyInstaller spec file (flipboot.spec)
+- Entry point script (flipboot_entry.py)
 - Initial alpha release of FlipBoot
 - Cross-platform support (Windows, Linux, macOS)
 - UEFI boot mode detection and switching
