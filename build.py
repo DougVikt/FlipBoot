@@ -108,10 +108,12 @@ def build_pyinstaller(onefile: bool = True, onedir: bool = False):
     for ex in excludes:
         cmd.extend(["--exclude-module", ex])
 
-    # UPX compression
-    cmd.append("--upx-dir" if os.path.exists("/usr/bin/upx") or os.path.exists("C:\\upx") else "")
-    # Remove empty arg
-    cmd = [c for c in cmd if c]
+    # UPX compression (only if UPX is available)
+    upx_available = os.path.exists("/usr/bin/upx") or os.path.exists("C:\\upx") or shutil.which("upx")
+    if upx_available:
+        cmd.append("--upx")
+    else:
+        cmd.append("--noupx")
 
     # Entry point
     cmd.append("flipboot_entry.py")
